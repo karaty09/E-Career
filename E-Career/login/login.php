@@ -19,7 +19,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- CSS Style -->
-    <link rel="stylesheet" href="../login/styles/stylesLogin.css">
+    <link rel="stylesheet" href="./styles/stylesLogin.css">
 </head>
 
 <body>
