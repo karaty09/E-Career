@@ -1,5 +1,5 @@
 <?php
-require_once '../connect.php';
+require_once '../../db/connect.php';
 
 try {
     // Get the raw POST data
@@ -14,7 +14,7 @@ try {
     $db->beginTransaction();
 
     // Table name
-    $tableName = 'tb_employee';
+    $tableName = 'tb_evaluate_employee';
 
     // Prepare the SQL statements for insert and update
     $columns = array_keys($data[0]);

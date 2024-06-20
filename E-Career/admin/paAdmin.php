@@ -1,10 +1,15 @@
+<?php
+include '../db/connect.php';
+include '../login/loginCheckSession.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>นำเข้าข้อมูล Promotion Adjustment (PA)</title>
+    <title>หลักเกณฑ์ Promotion Adjustment (PA)</title>
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -21,6 +26,15 @@
     <style>
         .size-col-table {
             width: 10%;
+        }
+
+        .button-table {
+            border: none;
+        }
+
+        .img-button-table {
+            width: 30px;
+            height: 30px;
         }
     </style>
 </head>
@@ -43,7 +57,7 @@
                     </div>
                 </div>
                 <div class="card">
-                    <div class="card-body">
+                    <div class="card-body" style="overflow-y: auto;">
                         <table class="table table-striped table-bordered">
                             <thead class="table-danger">
                                 <tr>
@@ -60,10 +74,10 @@
                             <tbody>
                                 <tr>
                                     <td scope="row" class="text-center">1</td>
-                                    <td>หลักเกณฑ์ Percentile ประชุมบุคคล ณ 31/10/2548​</td>
-                                    <td class="text-center">Logo</td>
-                                    <td class="text-center">Logo</td>
-                                    <td class="text-center">Logo</td>
+                                    <td>หลักเกณฑ์ Promotion Adjustment ประชุมบุคคล ณ 31/10/2548​</td>
+                                    <td class="text-center"><button class="button-table"><img src="../assets/img/search.png" alt="" class="img-button-table"></button></td>
+                                    <td class="text-center"><button class="button-table"><img src="../assets/img/pencil.png" alt="" class="img-button-table"></button></td>
+                                    <td class="text-center"><button class="button-table"><img src="../assets/img/docs.png" alt="" class="img-button-table"></button></td>
                                     <td class="text-center">01-Jan-2024</td>
                                     <td class="text-center">Supansa Moonsiri</td>
                                     <td class="text-center">01-May-2024</td>
@@ -81,7 +95,7 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">กฎของ Percentile ใหม่</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">เกณฑ์ของ Promotion Adjustment</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">

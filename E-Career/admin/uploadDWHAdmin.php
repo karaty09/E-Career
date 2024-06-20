@@ -1,3 +1,8 @@
+<?php
+include '../db/connect.php';
+include '../login/loginCheckSession.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
