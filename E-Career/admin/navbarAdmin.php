@@ -1,109 +1,69 @@
-<style>
-    .title-background {
-        height: 400px;
-        padding: 0px;
-    }
-
-    .image-title-background {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .logo-on-title {
-        position: absolute;
-        z-index: 1;
-        top: 30px;
-        left: 2%;
-        width: 300px;
-        height: 100px;
-    }
-
-    .font-on-title {
-        position: absolute;
-        z-index: 1;
-        top: 60px;
-        right: 2%;
-    }
-
-    /* Default state */
-    .nav-pills .nav-link {
-        color: white;
-        margin: 0 5px;
-    }
-
-    /* Active state */
-    .nav-pills .nav-link.active {
-        background-color: white;
-        /* Background color when active */
-        color: black;
-        /* Text color when active */
-    }
-
-    /* Hover state */
-    .nav-pills .nav-link:hover {
-        background-color: grey;
-        /* Background color on hover */
-        color: black;
-        /* Text color on hover */
-    }
-
-    /* Optional: Focus state */
-    .nav-pills .nav-link:focus {
-        background-color: white;
-        /* Background color on focus */
-        color: black;
-        /* Text color on focus */
-    }
-</style>
+<link rel="stylesheet" href="./styles/stylesNavbarAdmin.css">
 
 <div class="container-fluid title-background">
-    <img src="../assets/img/titlev3.jpg" alt="" class="image-title-background">
+    <img src="../assets/img/titlev2.jpg" alt="" class="image-title-background">
     <img src="../assets/img/logo.png" alt="" class="logo-on-title">
     <h1 class="font-on-title text-white fw-bold">E-Career</h1>
 </div>
 
-<nav class="navbar navbar-expand" style="background-color: #212121;">
+<nav class="navbar navbar-expand-md navbar-dark" style="background-color: #212121;">
     <div class="container-fluid">
+        <!-- Navbar Toggler Icon -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navbar Collapse Content -->
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="nav nav-pills" id="pills-tab" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="pills-home-tab" href="homeAdmin.php" role="tab" aria-controls="pills-home" aria-selected="true">Home</a>
+            <ul class="navbar-nav me-auto mb-2 mb-md-0 nav-pills" id="pills-tab">
+                <!-- รายการ Navbar จะถูกแสดงใน burger menu นี้ -->
+                <li class="nav-item">
+                    <a class="nav-link" href="homeAdmin.php" id="pills-home-tab">Home</a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Criteria
-                    </a>
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                       aria-expanded="false">Criteria</a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="uploadDWHAdmin.php">Upload DWH</a></li>
                         <li><a class="dropdown-item" href="percentileAdmin.php">Percentile</a></li>
                         <li><a class="dropdown-item" href="paAdmin.php">PA</a></li>
                         <li><a class="dropdown-item" href="#">SA</a></li>
+                        <li><a class="dropdown-item" href="">Quota</a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Promote
-                    </a>
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                       aria-expanded="false">Promote</a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="#">PA (Promotion Adjustment)</a></li>
                         <li><a class="dropdown-item" href="#">SA (Special Adjustment)</a></li>
                         <li><a class="dropdown-item" href="#">SR (Special Recognition)</a></li>
                     </ul>
                 </li>
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="pills-xxxx-tab" href="" role="tab" aria-controls="pills-xxxx" aria-selected="false">XXXXX</a>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" id="pills-xxxx-tab">XXXXX</a>
                 </li>
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="pills-xxxx-tab" href="" role="tab" aria-controls="pills-xxxx" aria-selected="false">XXXXX</a>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" id="pills-xxxx-tab">XXXXX</a>
                 </li>
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="pills-forecast-tab" href="" role="tab" aria-controls="pills-forecast" aria-selected="false">Forecast</a>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" id="pills-forecast-tab">Forecast</a>
                 </li>
             </ul>
         </div>
-        <div style="margin-right: 10px;">
-            <span class="text-white">Admin</span>
+        <div class="dropdown d-flex align-items-center">
+            <button class="dropdown-toggle btn btn-primary border-0" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                <?php
+                if ($role == 1) {
+                    $role = "Admin";
+                }
+                ?>
+                <span class="text-white"><?php echo $firstname . " " . $lastname . " (" . $role . ")" ?></span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
+                <li><a class="dropdown-item" style="margin-bottom: 10px;" href="../login/logout.php">ออกจากระบบ</a></li>
+            </ul>
         </div>
     </div>
 </nav>
@@ -126,7 +86,6 @@
         dropdownItems.forEach(function(item) {
             if (item.getAttribute('href') === page) {
                 item.classList.add('active');
-                // Find the parent dropdown and add the active class to it
                 var parentDropdown = item.closest('.nav-item.dropdown').querySelector('.nav-link');
                 if (parentDropdown) {
                     parentDropdown.classList.add('active');

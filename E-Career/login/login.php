@@ -36,24 +36,24 @@
                         <div style="padding: 20px;">
                             <center>
                                 <div style="height: 100px;">
-                                    <img src="../assets/img/logo.png" style="height: 130%;">
+                                    <img src="../assets/img/logo.png" style="height: 100%;">
                                 </div>
                             </center>
                             <br>
                             <br>
-                            <form action="../login/login_db.php" method="post">
+                            <form action="../login/loginDBCheck.php" method="post">
                                 <div class="input-section">
                                     <h6>User:</h6>
                                     <div class="input-container">
                                         <img src="../assets/img/user.png" class="input-icon">
-                                        <input type="password" id="user" name="user" placeholder="EX (Supansak)" required class="form-control border border-2 rounded-2 input-style">
+                                        <input type="text" id="username" name="username" placeholder="EX (Supansa)" required class="form-control input-style">
                                     </div>
                                 </div>
                                 <div class="input-section">
                                     <h6>Password:</h6>
                                     <div class="input-container">
                                         <img src="../assets/img/padlock.png" class="input-icon">
-                                        <input type="password" id="password" name="password" placeholder="EX (080XXXXXXX)" required class="form-control border border-2 rounded-2 input-style">
+                                        <input type="password" id="password" name="password" placeholder="EX (080XXXXXXX)" required class="form-control input-style">
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-center">

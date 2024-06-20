@@ -1,3 +1,8 @@
+<?php
+include '../db/connect.php';
+include '../login/loginCheckSession.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -22,6 +27,15 @@
         .size-col-table {
             width: 10%;
         }
+
+        .button-table {
+            border: none;
+        }
+
+        .img-button-table {
+            width: 30px;
+            height: 30px;
+        }
     </style>
 </head>
 
@@ -43,7 +57,7 @@
                     </div>
                 </div>
                 <div class="card">
-                    <div class="card-body">
+                    <div class="card-body" style="overflow-y: auto;">
                         <table class="table table-striped table-bordered">
                             <thead class="table-danger">
                                 <tr>
@@ -61,9 +75,9 @@
                                 <tr>
                                     <td scope="row" class="text-center">1</td>
                                     <td>หลักเกณฑ์ Percentile ประชุมบุคคล ณ 31/10/2548​</td>
-                                    <td class="text-center">Logo</td>
-                                    <td class="text-center">Logo</td>
-                                    <td class="text-center">Logo</td>
+                                    <td class="text-center"><button class="button-table"><img src="../assets/img/search.png" alt="" class="img-button-table"></button></td>
+                                    <td class="text-center"><button class="button-table"><img src="../assets/img/pencil.png" alt="" class="img-button-table"></button></td>
+                                    <td class="text-center"><button class="button-table"><img src="../assets/img/docs.png" alt="" class="img-button-table"></button></td>
                                     <td class="text-center">01-Jan-2024</td>
                                     <td class="text-center">Supansa Moonsiri</td>
                                     <td class="text-center">01-May-2024</td>
@@ -81,7 +95,7 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">กฎของ Percentile ใหม่</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">เกณฑ์ของ Percentile</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -103,11 +117,11 @@
                     </div>
                     <div class="row mb-3">
                         <div class="col-6">
-                            <p>Active Date: </p>
+                            <p>Edit Date: </p>
                             <input type="date" class="form-control">
                         </div>
                         <div class="col-6">
-                            <p>Edit Date: </p>
+                            <p>Active Date: </p>
                             <input type="date" class="form-control">
                         </div>
                     </div>
