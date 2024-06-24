@@ -22,6 +22,12 @@ include '../login/loginCheckSession.php';
 
     <!-- CSS Style -->
     <link rel="stylesheet" href="../assets/src/styles/stylesBody.css">
+
+    <style>
+        .font-td-table {
+            font-size: 14px;
+        }
+    </style>
 </head>
 
 <body>
@@ -32,12 +38,54 @@ include '../login/loginCheckSession.php';
     <!-- Content -->
     <div class="container-fluid mt-3 mb-3">
         <div class="row" style="margin-left: 40px; margin-right: 40px;">
-            <div class="col-md-12 col-12" style="padding: 20px; height: 100%;">
-                <div class="row mb-3">
-                    <div class="col-12 d-flex justify-content-center">
-                        <h4 class="text-black">Home Page</h4>
-                    </div>
-                </div>
+            <div class="col-md-12 col-12" style="padding: 20px; height: 100%; overflow-y: auto;">
+                <table class="table table-striped table-bordered">
+                    <thead class="table-dark">
+                        <tr class="text-center">
+                            <th scope="col">No</th>
+                            <th scope="col">Emp ID</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Position</th>
+                            <th scope="col">Section</th>
+                            <th scope="col">Department</th>
+                            <th scope="col">Division</th>
+                            <th scope="col">Company</th>
+                            <th scope="col">PL Level</th>
+                            <th scope="col">EMP Type</th>
+                            <th scope="col">Salary</th>
+                            <th scope="col">Percentile</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $sql = "SELECT * FROM tb_evaluate_employee";
+                        $stmt = $db->prepare($sql);
+                        $stmt->execute();
+                        $rows = $stmt->fetchAll();
+
+                        $i = 1;
+                        foreach ($rows as $row) {
+                        ?>
+                            <tr>
+                                <td class="font-td-table text-center"><?php echo $i; ?></td>
+                                <td class="font-td-table"><?php echo $row['emp_code']; ?></td>
+                                <td class="font-td-table"><?php echo $row['name_prefix_th'] . " " . $row['firstname_th'] . " " . $row['lastname_th']; ?></td>
+                                <td class="font-td-table"><?php echo $row['position_name_th']; ?></td>
+                                <td class="font-td-table"><?php echo $row['section_name']; ?></td>
+                                <td class="font-td-table"><?php echo $row['department_name']; ?></td>
+                                <td class="font-td-table"><?php echo $row['division_name']; ?></td>
+                                <td class="font-td-table"><?php echo $row['company_name']; ?></td>
+                                <td class="font-td-table text-center"><?php echo $row['pl_subset_eng']; ?></td>
+                                <td class="font-td-table text-center"><?php echo $row['emp_type']; ?></td>
+                                <td class="font-td-table text-end"><?php echo number_format($row['salary']); ?></td>
+                                <td class="font-td-table"><?php echo $row['percentile_range']; ?></td>
+                            </tr>
+                        <?php
+                            $i++;
+                        }
+                        ?>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

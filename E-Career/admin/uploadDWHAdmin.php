@@ -184,6 +184,7 @@ include '../login/loginCheckSession.php';
                     position_name_eng: row["Position (English)"] || "",
                     cost_center_payment: row["Cost Center (Payment)"] || "",
                     cost_center_org: row["Cost Center (Organization)"] || "",
+                    emp_type: row["Employee Type ID"] || "",
                     birthdate: row["Birthdate"] || "",
                     scg_hiring_date: row["SCG Hiring Date"] || "",
                     position_entry_date: row["Position entry date"] || "",
@@ -208,6 +209,8 @@ include '../login/loginCheckSession.php';
                     hp_review_rating_past3y: row["High Potential Review Rating (Past 3 Year)"] || "-",
                     hp_review_rating_past4y: row["High Potential Review Rating (Past 4 Year)"] || "-",
                     hp_review_rating_past5y: row["High Potential Review Rating (Past 5 Year)"] || "-",
+                    master_peace: row["Master Peace"] || "-",
+                    master_peace_file: row["Master Peace File"] || "",
                     eligible: row["Eligible"] || "",
                     eligible_type: row["Eligible Type"] || "",
                 }));
@@ -222,7 +225,7 @@ include '../login/loginCheckSession.php';
                     })
                     .then(response => response.text())
                     .then(data => {
-                        console.log(data);
+                        console.log('Success:', data);
                         Swal.fire({
                             title: "บันทึกข้อมูลสำเร็จ",
                             icon: "success",
