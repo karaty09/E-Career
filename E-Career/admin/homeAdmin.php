@@ -1,6 +1,158 @@
 <?php
 include '../db/connect.php';
 include '../login/loginCheckSession.php';
+
+// $empPl = "O3";
+// $criteriaSql = "SELECT * FROM PA_standard WHERE Active_Date = (SELECT MAX(Active_Date) FROM PA_standard) AND PA_level = :pl_level";
+// $stmt = $db->prepare($criteriaSql);
+// $stmt->bindParam("pl_level", $empPl);
+// $stmt->execute();
+// $criteria = $stmt->fetchAll();
+// var_dump($criteria);
+
+function checkForEligible($db, $empPl, $empArr, $empTig, $empEsy, $empP, $empHP, $empMP){
+    $empPotentialArr = [
+        "p"=> $empP,
+        "hp"=> $empHP,
+        "mp"=> $empMP
+    ];
+
+    $currentTag = [
+        "Super_Fast",
+        "Fast",
+        "Normal"
+    ];
+    
+    $resultTag = [];
+
+    for ($tagIndex=0; $tagIndex < count($currentTag); $tagIndex++) { 
+        $criteriaSql = "SELECT * FROM PA_standard WHERE Active_Date = (SELECT MAX(Active_Date) FROM PA_standard) AND PA_level = :pl_level AND Tag = :tag";  // รับค่าเกณฑ์มาจาก DB โดยอ้างอิงจากวันที่ล่าสุดที่ประกาศใช้ (Active Date) ในแต่ละ Tag ของแต่ละ PL Level
+        $stmt = $db->prepare($criteriaSql);
+        $stmt->bindParam("pl_level", $empPl);
+        $stmt->bindParam("tag", $currentTag[$tagIndex]);
+        $stmt->execute();
+        $criteria = $stmt->fetchObject();
+        var_dump($criteria);
+        echo "<br><br><br><br><br>";
+
+        // กำหนดคะแนนของ "ดีเลิศ" ถึง "ปรับปรุง"
+        $excellent = 5;
+        $veryGood = 4;      //success
+        $good = 3;          //veryGood
+        $fair = 2;          //good
+        $adjust = 1;        //poor
+
+        $defineYearLater = $criteria->estimate;
+        $defineTig = $criteria->TIG;
+        $defineEsy = $criteria->ESY;
+        $defineTag = $criteria->Tag;
+        // $definePl = $criteria->PA_level;        // PL ?
+
+        $defineExcellentYear = $criteria->Excellent;    //defineExcellentYear
+        $defineVeryGoodYear = $criteria->very_good;     //defineSuccessYear
+        $defineGoodYear = $criteria->good;              //defineVeryGoodYear
+        $defineFairYear = $criteria->fair;              //defineGoodYear
+        $defineAdjustYear = $criteria->adjust;          //definePoorYear
+
+        $reqPotential = [
+            "p"=> $criteria->P,
+            "hp"=> $criteria->HP,
+            "mp"=> $criteria->Master_piece
+        ];  // คุณสมบัติพิเศษที่กำหนดไว้
+
+        $eligibleArr = [];      
+        /* 
+            Array ที่ใช้เก็บค่า True (ไม่มีการเก็บค่า False) เพื่อตรวจสอบว่าพนักงานผ่านเกณฑ์ (Eligible) หรือไม่
+            ยกตัวอย่างเช่น
+                1. ในการดูผลการประเมินย้อนหลัง 3 ปีพนักงาน A มี eligibleArr = [true, true, true]
+                    หมายความว่าพนักงาน A มีสิทธิ์ขอเลี่อนตำแหน่ง (เนื่องจากจำนวน index ของ eligibleArr = จำนวนย้อนหลัง)
+                2. หากดูผลการประเมินย้อนหลัง 3 ปีแล้วพบว่าพนักงาน A มี eligibleArr = [true]
+                    หมายความว่าพนักงาน A จะไม่มีสิทธิ์ขอเลื่อนตำแหน่งเนื่องจากจำนวน index ของ eligibleArr ไม่เท่ากับจำนวนปีย้อนหลัง
+        */
+
+        for ($index=0; $index < $defineYearLater; $index++) { 
+            $element = $empArr[$index];
+
+            if (empty($element)){
+                break;
+            }
+
+            if ($defineExcellentYear != 0){
+                if ($element == $excellent && count($empArr) != 0){
+                    array_push($eligibleArr, true);
+                    $defineExcellentYear --;
+                    continue;
+                }
+            }
+
+            if ($defineVeryGoodYear != 0){
+                if ($element == $veryGood && count($empArr) != 0){
+                    array_push($eligibleArr, true);
+                    $defineVeryGoodYear --;
+                    continue;
+                }
+            }
+
+            if ($defineGoodYear != 0){
+                if ($element == $good && count($empArr) != 0){
+                    array_push($eligibleArr, true);
+                    $defineGoodYear --;
+                    continue;
+                }
+            }
+
+            if ($defineFairYear != 0){
+                if ($element == $fair && count($empArr) != 0){
+                    array_push($eligibleArr, true);
+                    $defineFairYear --;
+                    continue;
+                }
+            }
+
+            if ($defineAdjustYear != 0){
+                if ($element == $adjust && count($empArr) != 0){
+                    array_push($eligibleArr, true);
+                    $defineAdjustYear --;
+                    continue;
+                }
+            }
+        }
+
+        $isEligible = false;
+        if (count($eligibleArr) == $defineYearLater and ($empTig >= $defineTig or $empEsy >= $defineEsy)){
+            if ($reqPotential['p'] == true and $reqPotential['hp'] == true){
+                if (($empPotentialArr['p'] >= $reqPotential['p'] or $empPotentialArr['hp'] >= $reqPotential['hp']) and $empPotentialArr['mp'] >= $reqPotential['mp']){
+                    $isEligible = true;
+                }
+            }
+        }else if ($reqPotential['p'] == false or $reqPotential['hp'] == false){
+            if (($empPotentialArr['p'] >= $reqPotential['p'] && $empPotentialArr['hp'] >= $reqPotential['hp'])&& $empPotentialArr['mp'] >= $reqPotential['mp']) {
+                $isEligible = true;
+            }
+        }
+
+        if ($isEligible){
+            array_push($resultTag, $currentTag[$tagIndex]);
+            return "Eligible in $resultTag[$tagIndex]";
+        }else{
+            array_push($resultTag, false);
+
+            if ($tagIndex == count($currentTag) - 1){
+                return "Not Eligible";
+            }
+        }
+
+
+
+        // echo $defineExcellentYear;
+        echo $empArr[1];
+        // var_dump($reqPotential["mp"]);
+        echo "<br><br><br>";
+        
+    }
+}
+
+checkForEligible($db,"O3", [5,4,3,1,1], 4, 8, false, true, false);
 ?>
 
 <!DOCTYPE html>
@@ -66,6 +218,8 @@ include '../login/loginCheckSession.php';
                             <th scope="col">Salary</th>
                             <th scope="col">Percentile</th>
                             <th scope="col">Master Piece</th>
+                            <th scope="col">Eligible</th>
+                            <th scope="col">Tag</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -74,6 +228,43 @@ include '../login/loginCheckSession.php';
                         $stmt = $db->prepare($sql);
                         $stmt->execute();
                         $rows = $stmt->fetchAll();
+
+                        // แปลงข้อมูลคะแนนให้เป็นรูปแบบเดียวกันคือ 5 ถึง 1
+                        switch ($row['review_rating_past1y']) {
+                            case '1':
+                            case 'ดีเลิศ':
+                                $row['review_rating_past1y'] = 5;
+                                break;
+
+                            case '2+':
+                            case 'ดีมาก':
+                                $row['review_rating_past1y'] = 4;
+                                break;
+
+                            case '2':
+                            case 'ดี':
+                                $row['review_rating_past1y'] = 3;
+                                break;
+
+                            case '3':
+                            case 'พอใช้':
+                                $row['review_rating_past1y'] = 2;
+                                break;
+
+                            case '4':
+                            case 'ต้องปรับปรุง':
+                                $row['review_rating_past1y'] = 1;
+                                break;
+
+                            default:
+                                $row['review_rating_past1y'] = false;
+                                break;
+                        }
+                        
+                        $row['review_rating_past2y'];
+                        $row['review_rating_past3y'];
+                        $row['review_rating_past4y'];
+                        $row['review_rating_past5y'];
 
                         $i = 1;
                         foreach ($rows as $row) {
@@ -98,6 +289,20 @@ include '../login/loginCheckSession.php';
                                                                 echo 'ไม่มี Master Piece';
                                                             }
                                                             ?></td>
+                                <td class="font-td-table">
+                                    <?php 
+                                        echo checkForEligible(
+                                            $db,
+                                            $row['pl_subset_th'],
+                                            $row['review_rating_past1y'],
+                                            $row['review_rating_past2y'],
+                                            $row['review_rating_past3y'],
+                                            $row['review_rating_past4y'],
+                                            $row['review_rating_past5y'],
+                                        )
+                                    ?>
+                                </td>
+                                <td class="font-td-table"><?php echo $row['percentile_range']; ?></td>
                             </tr>
                         <?php
                             $i++;
