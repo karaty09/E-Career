@@ -364,7 +364,6 @@ include '../login/loginCheckSession.php';
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                 <button type="submit" class="btn btn-primary">Save</button>
                             </div>
-                        </div>
                     </form>
                 </div>
             </div>
@@ -448,31 +447,6 @@ include '../login/loginCheckSession.php';
             });
         });
 
-        document.addEventListener('DOMContentLoaded', function() {
-            var editButtons = document.querySelectorAll('.editPABtn');
-
-            editButtons.forEach(function(button) {
-                button.addEventListener('click', function() {
-                    var id = this.getAttribute('data-id');
-                    console.log('ID ที่ส่งไป:', id);
-                    var xhr = new XMLHttpRequest();
-                    xhr.open('POST', './backend/fetchEditPA.php', true);
-                    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-
-                    xhr.onreadystatechange = function() {
-                        if (xhr.readyState === XMLHttpRequest.DONE) {
-                            if (xhr.status === 200) {
-                                document.getElementById('editModalBody').innerHTML = xhr.responseText;
-                            } else {
-                                console.error('เกิดข้อผิดพลาดในการโหลดข้อมูล');
-                            }
-                        }
-                    };
-
-                    xhr.send('id=' + encodeURIComponent(id));
-                });
-            });
-        });
 
         document.getElementById('modalForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent default form submission
@@ -616,7 +590,6 @@ include '../login/loginCheckSession.php';
                 });
         });
     </script>
-
 
 
 </body>
