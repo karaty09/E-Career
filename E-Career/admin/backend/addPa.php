@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $Active_Date = $_POST['Active_Date'];
 
         $sql = "INSERT INTO PA_standard 
-                (PA_level, TIG, ESY, estimate, HP, P, Master_pice, Tag, Excellent, very_good, good, fair, adjust, Edit_by, Edit_Date, Meet, Active_Date) 
+                (PA_level, TIG, ESY, estimate, HP, P, Master_piece, Tag, Excellent, very_good, good, fair, adjust, Edit_by, Edit_Date, Meet, Active_Date) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $db->prepare($sql);
 
@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $Active_Date = $_POST['Active_Date'];
 
         $sql = "INSERT INTO PA_standard 
-                (PA_level, TIG, ESY, estimate, HP, P, Master_pice, Tag, Excellent, very_good, good, fair, adjust, Edit_by, Edit_Date, Meet, Active_Date) 
+                (PA_level, TIG, ESY, estimate, HP, P, Master_piece, Tag, Excellent, very_good, good, fair, adjust, Edit_by, Edit_Date, Meet, Active_Date) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $db->prepare($sql);
 
@@ -102,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $Active_Date = $_POST['Active_Date'];
 
         $sql = "INSERT INTO PA_standard 
-                (PA_level, TIG, ESY, estimate, HP, P, Master_pice, Tag, Excellent, very_good, good, fair, adjust, Edit_by, Edit_Date, Meet, Active_Date) 
+                (PA_level, TIG, ESY, estimate, HP, P, Master_piece, Tag, Excellent, very_good, good, fair, adjust, Edit_by, Edit_Date, Meet, Active_Date) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $db->prepare($sql);
 
