@@ -209,10 +209,10 @@ include '../login/loginCheckSession.php';
                     hp_review_rating_past3y: row["High Potential Review Rating (Past 3 Year)"] || "-",
                     hp_review_rating_past4y: row["High Potential Review Rating (Past 4 Year)"] || "-",
                     hp_review_rating_past5y: row["High Potential Review Rating (Past 5 Year)"] || "-",
-                    master_peace: row["Master Peace"] || "-",
-                    master_peace_file: row["Master Peace File"] || "",
-                    eligible: row["Eligible"] || "",
-                    eligible_type: row["Eligible Type"] || "",
+                    master_piece: "0",
+                    master_piece_file: "",
+                    eligible: "",
+                    eligible_type: "",
                 }));
 
                 // Send the JSON data to the PHP script using fetch API
