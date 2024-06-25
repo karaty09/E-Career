@@ -30,7 +30,7 @@
                         <li><a class="dropdown-item" href="paAdmin.php">PA</a></li>
                         <li><a class="dropdown-item" href="#">SA</a></li>
                         <li><a class="dropdown-item" href="#">Quota</a></li>
-                        <li><a class="dropdown-item" href="addMasterPeaceAdmin.php">Master Peace</a></li>
+                        <li><a class="dropdown-item" href="addMasterPeaceAdmin.php">Master Piece</a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">

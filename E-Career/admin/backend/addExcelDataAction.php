@@ -111,7 +111,7 @@ try {
     cost_center_org = ?, emp_type = ?, birthdate = ?, scg_hiring_date = ?, position_entry_date = ?, pl_year = ?, pl_month = ?, age_year = ?, age_month = ?, service_year = ?,
     service_month = ?, esy = ?, oesy = ?, oesm = ?, salary = ?, review_rating_past1y = ?, review_rating_past2y = ?, review_rating_past3y = ?, review_rating_past4y = ?,
     review_rating_past5y = ?, hp_review_rating_past1y = ?, hp_review_rating_past2y = ?, hp_review_rating_past3y = ?, hp_review_rating_past4y = ?, hp_review_rating_past5y = ?,
-    percentile_range = ?, master_peace = ?, master_peace_file = ?, eligible = ?, eligible_type = ? WHERE emp_code = ?";
+    percentile_range = ?, master_piece = ?, master_piece_file = ?, eligible = ?, eligible_type = ? WHERE emp_code = ?";
 
     $insertStmt = $db->prepare($insertSQL);
     $updateStmt = $db->prepare($updateSQL);
@@ -134,7 +134,7 @@ try {
                 $row['pl_year'], $row['pl_month'], $row['age_year'], $row['age_month'], $row['service_year'], $row['service_month'], $row['esy'], $row['oesy'], $row['oesm'],
                 $row['salary'], $row['review_rating_past1y'], $row['review_rating_past2y'], $row['review_rating_past3y'], $row['review_rating_past4y'], $row['review_rating_past5y'],
                 $row['hp_review_rating_past1y'], $row['hp_review_rating_past2y'], $row['hp_review_rating_past3y'], $row['hp_review_rating_past4y'], $row['hp_review_rating_past5y'],
-                $row['percentile_range'], $row['master_peace'], $row['master_peace_file'], $row['eligible'], $row['eligible_type'], $row['emp_code']
+                $row['percentile_range'], $row['master_piece'], $row['master_piece_file'], $row['eligible'], $row['eligible_type'], $row['emp_code']
             ]);
         } else {
             // Insert new record

@@ -27,6 +27,17 @@ include '../login/loginCheckSession.php';
         .font-td-table {
             font-size: 14px;
         }
+
+        /* dataTables Config */
+        .dataTables_filter,
+        .dataTables_length,
+        .dataTables_info {
+            display: none;
+        }
+
+        .dataTables_wrapper .dataTables_paginate {
+            margin-left: -80px;
+        }
     </style>
 </head>
 
@@ -39,7 +50,7 @@ include '../login/loginCheckSession.php';
     <div class="container-fluid mt-3 mb-3">
         <div class="row" style="margin-left: 40px; margin-right: 40px;">
             <div class="col-md-12 col-12" style="padding: 20px; height: 100%; overflow-y: auto;">
-                <table class="table table-striped table-bordered">
+                <table class="table table-striped table-bordered" id="tb-data">
                     <thead class="table-dark">
                         <tr class="text-center">
                             <th scope="col">No</th>
@@ -54,6 +65,7 @@ include '../login/loginCheckSession.php';
                             <th scope="col">EMP Type</th>
                             <th scope="col">Salary</th>
                             <th scope="col">Percentile</th>
+                            <th scope="col">Master Piece</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -79,6 +91,13 @@ include '../login/loginCheckSession.php';
                                 <td class="font-td-table text-center"><?php echo $row['emp_type']; ?></td>
                                 <td class="font-td-table text-end"><?php echo number_format($row['salary']); ?></td>
                                 <td class="font-td-table"><?php echo $row['percentile_range']; ?></td>
+                                <td class="font-td-table"><?php
+                                                            if ($row['master_piece'] == 1) {
+                                                                echo 'มี Master Piece';
+                                                            } else {
+                                                                echo 'ไม่มี Master Piece';
+                                                            }
+                                                            ?></td>
                             </tr>
                         <?php
                             $i++;
@@ -96,6 +115,25 @@ include '../login/loginCheckSession.php';
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+    <!-- DataTables -->
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+
+    <!-- DataTables Config -->
+    <script>
+        $(document).ready(function() {
+            var table = $('#tb-data').DataTable();
+
+            // $('#searchInput').on('keyup', function() {
+            //     table.search(this.value).draw();
+            // });
+        });
+    </script>
+
 </body>
 
 </html>
