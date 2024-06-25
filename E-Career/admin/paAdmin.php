@@ -72,16 +72,40 @@ include '../login/loginCheckSession.php';
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td scope="row" class="text-center">1</td>
-                                    <td>หลักเกณฑ์ Promotion Adjustment ประชุมบุคคล ณ 31/10/2548​</td>
-                                    <td class="text-center"><button class="button-table"><img src="../assets/img/search.png" alt="" class="img-button-table"></button></td>
-                                    <td class="text-center"><button class="button-table"><img src="../assets/img/pencil.png" alt="" class="img-button-table"></button></td>
-                                    <td class="text-center"><button class="button-table"><img src="../assets/img/docs.png" alt="" class="img-button-table"></button></td>
-                                    <td class="text-center">01-Jan-2024</td>
-                                    <td class="text-center">Supansa Moonsiri</td>
-                                    <td class="text-center">01-May-2024</td>
-                                </tr>
+                                <?php
+                                $PA = "SELECT Meet, Active_Date, Edit_by, Edit_Date, document FROM PA_standard GROUP BY Meet, Active_Date, Edit_by, Edit_Date, document";
+                                $PA_result = $db->prepare($PA);
+                                $PA_result->execute();
+                                $PA_data = $PA_result->fetchAll();
+                                if ($PA_result->rowCount() > 0) {
+                                    $i = 1;
+                                    foreach ($PA_data as $row) {
+                                        $active_date = DateTime::createFromFormat('Y-m-d', $row['Active_Date'])->format('d-m-Y');
+                                        $edit_date = DateTime::createFromFormat('Y-m-d', $row['Edit_Date'])->format('d-m-Y');
+                                        $meet_date = DateTime::createFromFormat('Y-m-d', $row['Meet'])->format('d-m-Y');
+                                ?>
+                                        <tr>
+                                            <td scope="row" class="text-center"><?php echo $i ?></td>
+                                            <td class="text-start"> หลักเกณฑ์ Promotion Adjustment ประชุมบุคคล ณ <?php echo ($meet_date) ?></td>
+                                            <td class="text-center"><button class="button-table showPABtn" data-bs-toggle="modal" data-bs-target="#showPAModal" data-id="<?php echo $row['Meet'] ?>"><img src="../assets/img/search.png" alt="" class="img-button-table"></button></td>
+                                            <td class="text-center"><button class="button-table"><img src="../assets/img/pencil.png" alt="" class="img-button-table"></button></td>
+                                            <td class="text-center">
+                                                <button class="button-table" id="<?php echo $row['Meet']; ?>" onclick="window.open('../assets/filedata/PA_pdf/<?php echo (!empty($row['document']) ? $row['document'] : '-'); ?>', '_blank')">
+                                                    <img src="../assets/img/docs.png" alt="" class="img-button-table">
+                                                </button>
+                                            </td>
+                                            <td class="text-center"><?php echo ($active_date) ?></td>
+                                            <td class="text-center"><?php echo $row['Edit_by'] ?></td>
+                                            <td class="text-center"><?php echo ($edit_date) ?></td>
+                                        </tr>
+                                <?php
+                                        $i++;
+                                    }
+                                } else {
+                                    // Handle case where no rows are returned, maybe display a message
+                                    echo '<tr><td colspan="8" class="text-center">ไม่มีข้อมูลหลักเกณฑ์ในการประเมิน PA Level ที่บันทึก</td></tr>';
+                                }
+                                ?>
                             </tbody>
                         </table>
                     </div>
@@ -90,7 +114,16 @@ include '../login/loginCheckSession.php';
         </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Modal Show -->
+    <div class="modal fade" id="showPAModal" tabindex="-1" aria-labelledby="showPAModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div id="showModalBody">
+                <!-- ข้อมูลที่จะแสดงจะถูกโหลดมาที่นี่ -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Add -->
     <div class="modal fade" id="percentileModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
@@ -115,13 +148,17 @@ include '../login/loginCheckSession.php';
                             </ul>
                         </div><br>
                         <div class="row mb-3">
-                            <div class="col-6">
-                                <p>หลักเกณฑ์ Promotion Adjustment ประชุมบุคคล : </p>
+                            <div class="col-4">
+                                <p>วันที่ประชุม : </p>
                                 <input type="date" name="Meet" id="Meet" class="form-control">
                             </div>
-                            <div class="col-6">
+                            <div class="col-4">
                                 <p>Active Date :</p>
                                 <input type="date" name="Active_Date" id="Active_Date" class="form-control">
+                            </div>
+                            <div class="col-4">
+                                <p>แนบเอกสารการประชุม (PDF) :</p>
+                                <input type="file" name="document_file" id="document_file" class="form-control" accept=".pdf">
                             </div>
                         </div>
                         <hr>
@@ -351,6 +388,33 @@ include '../login/loginCheckSession.php';
     </script>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var editButtons = document.querySelectorAll('.showPABtn');
+
+            editButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    var id = this.getAttribute('data-id');
+                    console.log('ID ที่ส่งไป:', id);
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('POST', './backend/fetchShowPA.php', true);
+                    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+                    xhr.onreadystatechange = function() {
+                        if (xhr.readyState === XMLHttpRequest.DONE) {
+                            if (xhr.status === 200) {
+                                document.getElementById('showModalBody').innerHTML = xhr.responseText;
+                            } else {
+                                console.error('เกิดข้อผิดพลาดในการโหลดข้อมูล');
+                            }
+                        }
+                    };
+
+                    xhr.send('id=' + encodeURIComponent(id));
+                });
+            });
+        });
+
+
         document.getElementById('modalForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent default form submission
             const PL = [
@@ -377,7 +441,7 @@ include '../login/loginCheckSession.php';
                 if (!document.getElementById(field).value) {
                     Swal.fire({
                         title: "เกิดข้อผิดพลาด",
-                        text: `กรุณากรอกข้อมูล ตรวจสอบจำนวนปีย้อนหลัง TIG ESY ให้ครบ`,
+                        text: `กรุณากรอกข้อมูล ตรวจสอบจำนวนปีย้อนหลัง TIG ESY วันที่การประชุมให้ครบ`,
                         icon: "error",
                     });
                     return; // หยุดการส่งฟอร์ม
@@ -385,13 +449,16 @@ include '../login/loginCheckSession.php';
             }
             // Normal
             var formData = new FormData();
+            var document_file = document.getElementById('document_file');
+            var document_files = document_file.files[0];
+            formData.append('document', document_files);
             formData.append('PA_level', document.getElementById('PL_level').value);
             formData.append('TIG', document.getElementById('TIGNormal').value);
             formData.append('ESY', document.getElementById('ESYNormal').value);
             formData.append('estimate', document.getElementById('estimateNormal').value);
             formData.append('HP', document.getElementById('High_potentialNormal').checked ? 1 : 0);
             formData.append('P', document.getElementById('PotentialNormal').checked ? 1 : 0);
-            formData.append('Master_pice', document.getElementById('Master_PieceNormal').checked ? 1 : 0);
+            formData.append('Master_piece', document.getElementById('Master_PieceNormal').checked ? 1 : 0);
             formData.append('Excellent', document.getElementById('ExcellentNormal').value);
             formData.append('very_good', document.getElementById('very_goodNormal').value);
             formData.append('good', document.getElementById('goodNormal').value);
