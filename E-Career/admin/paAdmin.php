@@ -88,7 +88,7 @@ include '../login/loginCheckSession.php';
                                             <td scope="row" class="text-center"><?php echo $i ?></td>
                                             <td class="text-start"> หลักเกณฑ์ Promotion Adjustment ประชุมบุคคล ณ <?php echo ($meet_date) ?></td>
                                             <td class="text-center"><button class="button-table showPABtn" data-bs-toggle="modal" data-bs-target="#showPAModal" data-id="<?php echo $row['Meet'] ?>"><img src="../assets/img/search.png" alt="" class="img-button-table"></button></td>
-                                            <td class="text-center"><button class="button-table"><img src="../assets/img/pencil.png" alt="" class="img-button-table"></button></td>
+                                            <td class="text-center"><button class="button-table editPABtn" data-bs-toggle="modal" data-bs-target="#editPAModal" data-id="<?php echo $row['Meet'] ?>"><img src="../assets/img/pencil.png" alt="" class="img-button-table"></button></td>
                                             <td class="text-center">
                                                 <button class="button-table" id="<?php echo $row['Meet']; ?>" onclick="window.open('../assets/filedata/PA_pdf/<?php echo (!empty($row['document']) ? $row['document'] : '-'); ?>', '_blank')">
                                                     <img src="../assets/img/docs.png" alt="" class="img-button-table">
@@ -364,8 +364,18 @@ include '../login/loginCheckSession.php';
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                 <button type="submit" class="btn btn-primary">Save</button>
                             </div>
+                        </div>
                     </form>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Edit -->
+    <div class="modal fade" id="editPAModal" tabindex="-1" aria-labelledby="editPAModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div id="editModalBody">
+                <!-- ข้อมูลที่จะแสดงจะถูกโหลดมาที่นี่ -->
             </div>
         </div>
     </div>
@@ -384,6 +394,30 @@ include '../login/loginCheckSession.php';
             document.getElementById('PL_level').innerText = PL_level;
             document.getElementById('PL_level').value = PL_level;
             console.log(PL_level)
+        }
+
+        function EditPL_level(PL_level) {
+            document.getElementById('EditPL_level').innerText = PL_level;
+            document.getElementById('EditPL_level').value = PL_level;
+
+            var getPL_Level = PL_level;
+
+            console.log('PL Level Select: ', getPL_Level);
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', './backend/fetchEditPASelect.php', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        document.getElementById('modalEditPAData').innerHTML = xhr.responseText;
+                    } else {
+                        console.error('เกิดข้อผิดพลาดในการโหลดข้อมูล');
+                    }
+                }
+            };
+
+            xhr.send('pl_level=' + encodeURIComponent(getPL_Level));
         }
     </script>
 
@@ -414,6 +448,31 @@ include '../login/loginCheckSession.php';
             });
         });
 
+        document.addEventListener('DOMContentLoaded', function() {
+            var editButtons = document.querySelectorAll('.editPABtn');
+
+            editButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    var id = this.getAttribute('data-id');
+                    console.log('ID ที่ส่งไป:', id);
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('POST', './backend/fetchEditPA.php', true);
+                    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+                    xhr.onreadystatechange = function() {
+                        if (xhr.readyState === XMLHttpRequest.DONE) {
+                            if (xhr.status === 200) {
+                                document.getElementById('editModalBody').innerHTML = xhr.responseText;
+                            } else {
+                                console.error('เกิดข้อผิดพลาดในการโหลดข้อมูล');
+                            }
+                        }
+                    };
+
+                    xhr.send('id=' + encodeURIComponent(id));
+                });
+            });
+        });
 
         document.getElementById('modalForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent default form submission
