@@ -32,8 +32,9 @@ function checkForEligible($db, $empPl, $empArr, $empTig, $empEsy, $empP, $empHP,
         $stmt->bindParam("tag", $currentTag[$tagIndex]);
         $stmt->execute();
         $criteria = $stmt->fetchObject();
-        var_dump($criteria);
-        echo "<br><br><br><br><br>";
+        if (empty($criteria)){
+            return ["status"=>"N/A", "tag"=>"N/A"];
+        }
 
         // กำหนดคะแนนของ "ดีเลิศ" ถึง "ปรับปรุง"
         $excellent = 5;
@@ -133,12 +134,13 @@ function checkForEligible($db, $empPl, $empArr, $empTig, $empEsy, $empP, $empHP,
 
         if ($isEligible){
             array_push($resultTag, $currentTag[$tagIndex]);
-            return "Eligible in $resultTag[$tagIndex]";
+            // return "Eligible in $resultTag[$tagIndex]";
+            return ["status"=>"Eligible", "tag"=>str_replace("_", " ", $resultTag[$tagIndex])];
         }else{
             array_push($resultTag, false);
 
             if ($tagIndex == count($currentTag) - 1){
-                return "Not Eligible";
+                return ["status"=>"Not Eligible", "tag"=>"None"];
             }
         }
 
@@ -152,7 +154,7 @@ function checkForEligible($db, $empPl, $empArr, $empTig, $empEsy, $empP, $empHP,
     }
 }
 
-checkForEligible($db,"O3", [5,4,3,1,1], 4, 8, false, true, false);
+// checkForEligible($db,"O3", [5,4,3,1,1], 4, 8, false, true, false);
 ?>
 
 <!DOCTYPE html>
@@ -229,45 +231,190 @@ checkForEligible($db,"O3", [5,4,3,1,1], 4, 8, false, true, false);
                         $stmt->execute();
                         $rows = $stmt->fetchAll();
 
-                        // แปลงข้อมูลคะแนนให้เป็นรูปแบบเดียวกันคือ 5 ถึง 1
-                        switch ($row['review_rating_past1y']) {
-                            case '1':
-                            case 'ดีเลิศ':
-                                $row['review_rating_past1y'] = 5;
-                                break;
-
-                            case '2+':
-                            case 'ดีมาก':
-                                $row['review_rating_past1y'] = 4;
-                                break;
-
-                            case '2':
-                            case 'ดี':
-                                $row['review_rating_past1y'] = 3;
-                                break;
-
-                            case '3':
-                            case 'พอใช้':
-                                $row['review_rating_past1y'] = 2;
-                                break;
-
-                            case '4':
-                            case 'ต้องปรับปรุง':
-                                $row['review_rating_past1y'] = 1;
-                                break;
-
-                            default:
-                                $row['review_rating_past1y'] = false;
-                                break;
-                        }
-                        
-                        $row['review_rating_past2y'];
-                        $row['review_rating_past3y'];
-                        $row['review_rating_past4y'];
-                        $row['review_rating_past5y'];
 
                         $i = 1;
                         foreach ($rows as $row) {
+                            // แปลงข้อมูลคะแนนให้เป็นรูปแบบเดียวกันคือ 5 ถึง 1
+                            // ผลการประเมินย้อนหลังปีที่ 1
+                            switch ($row['review_rating_past1y']) {
+                                case '1':
+                                case 'ดีเลิศ':
+                                    $row['review_rating_past1y'] = 5;
+                                    break;
+
+                                case '2+':
+                                case 'ดีมาก':
+                                    $row['review_rating_past1y'] = 4;
+                                    break;
+
+                                case '2':
+                                case 'ดี':
+                                    $row['review_rating_past1y'] = 3;
+                                    break;
+
+                                case '3':
+                                case 'พอใช้':
+                                    $row['review_rating_past1y'] = 2;
+                                    break;
+
+                                case '4':
+                                case 'ต้องปรับปรุง':
+                                    $row['review_rating_past1y'] = 1;
+                                    break;
+
+                                default:
+                                    $row['review_rating_past1y'] = false;
+                                    break;
+                            }
+
+                            // ผลการประเมินย้อนหลังปีที่ 2
+                            switch ($row['review_rating_past2y']) {
+                                case '1':
+                                case 'ดีเลิศ':
+                                    $row['review_rating_past2y'] = 5;
+                                    break;
+
+                                case '2+':
+                                case 'ดีมาก':
+                                    $row['review_rating_past2y'] = 4;
+                                    break;
+
+                                case '2':
+                                case 'ดี':
+                                    $row['review_rating_past2y'] = 3;
+                                    break;
+
+                                case '3':
+                                case 'พอใช้':
+                                    $row['review_rating_past2y'] = 2;
+                                    break;
+
+                                case '4':
+                                case 'ต้องปรับปรุง':
+                                    $row['review_rating_past2y'] = 1;
+                                    break;
+
+                                default:
+                                    $row['review_rating_past2y'] = false;
+                                    break;
+                            }
+
+                            // ผลการประเมินย้อนหลังปีที่ 3
+                            switch ($row['review_rating_past3y']) {
+                                case '1':
+                                case 'ดีเลิศ':
+                                    $row['review_rating_past3y'] = 5;
+                                    break;
+
+                                case '2+':
+                                case 'ดีมาก':
+                                    $row['review_rating_past3y'] = 4;
+                                    break;
+
+                                case '2':
+                                case 'ดี':
+                                    $row['review_rating_past3y'] = 3;
+                                    break;
+
+                                case '3':
+                                case 'พอใช้':
+                                    $row['review_rating_past3y'] = 2;
+                                    break;
+
+                                case '4':
+                                case 'ต้องปรับปรุง':
+                                    $row['review_rating_past3y'] = 1;
+                                    break;
+
+                                default:
+                                    $row['review_rating_past3y'] = false;
+                                    break;
+                            }
+
+                            // ผลการประเมินย้อนหลังปีที่ 4
+                            switch ($row['review_rating_past4y']) {
+                                case '1':
+                                case 'ดีเลิศ':
+                                    $row['review_rating_past4y'] = 5;
+                                    break;
+
+                                case '2+':
+                                case 'ดีมาก':
+                                    $row['review_rating_past4y'] = 4;
+                                    break;
+
+                                case '2':
+                                case 'ดี':
+                                    $row['review_rating_past4y'] = 3;
+                                    break;
+
+                                case '3':
+                                case 'พอใช้':
+                                    $row['review_rating_past4y'] = 2;
+                                    break;
+
+                                case '4':
+                                case 'ต้องปรับปรุง':
+                                    $row['review_rating_past4y'] = 1;
+                                    break;
+
+                                default:
+                                    $row['review_rating_past4y'] = false;
+                                    break;
+                            }
+
+                            // ผลการประเมินย้อนหลังปีที่ 5
+                            switch ($row['review_rating_past5y']) {
+                                case '1':
+                                case 'ดีเลิศ':
+                                    $row['review_rating_past5y'] = 5;
+                                    break;
+
+                                case '2+':
+                                case 'ดีมาก':
+                                    $row['review_rating_past5y'] = 4;
+                                    break;
+
+                                case '2':
+                                case 'ดี':
+                                    $row['review_rating_past5y'] = 3;
+                                    break;
+
+                                case '3':
+                                case 'พอใช้':
+                                    $row['review_rating_past5y'] = 2;
+                                    break;
+
+                                case '4':
+                                case 'ต้องปรับปรุง':
+                                    $row['review_rating_past5y'] = 1;
+                                    break;
+
+                                default:
+                                    $row['review_rating_past5y'] = false;
+                                    break;
+                            }
+
+                            $eligible = checkForEligible(
+                                $db,
+                                $row['pl_subset_eng'],
+                                [
+                                    $row['review_rating_past1y'],
+                                    $row['review_rating_past2y'],
+                                    $row['review_rating_past3y'],
+                                    $row['review_rating_past4y'],
+                                    $row['review_rating_past5y'],
+                                ],
+                                $row['pl_year'],
+                                $row['esy'],
+                                true,   //P
+                                true,   // HP
+                                $row['master_piece']
+                                
+                            );
+
+                            $eligibleStatus = $eligible['status'];
+                            $eligibleInTag = $eligible['tag'];
                         ?>
                             <tr>
                                 <td class="font-td-table text-center"><?php echo $i; ?></td>
@@ -291,18 +438,14 @@ checkForEligible($db,"O3", [5,4,3,1,1], 4, 8, false, true, false);
                                                             ?></td>
                                 <td class="font-td-table">
                                     <?php 
-                                        echo checkForEligible(
-                                            $db,
-                                            $row['pl_subset_th'],
-                                            $row['review_rating_past1y'],
-                                            $row['review_rating_past2y'],
-                                            $row['review_rating_past3y'],
-                                            $row['review_rating_past4y'],
-                                            $row['review_rating_past5y'],
-                                        )
+                                        echo $eligibleStatus;
                                     ?>
                                 </td>
-                                <td class="font-td-table"><?php echo $row['percentile_range']; ?></td>
+                                <td class="font-td-table">
+                                    <?php 
+                                        echo $eligibleInTag; 
+                                    ?>
+                                </td>
                             </tr>
                         <?php
                             $i++;
