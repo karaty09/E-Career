@@ -55,12 +55,26 @@ function checkForEligible($db, $empPl, $empArr, $empTig, $empEsy, $empP, $empHP,
         $defineFairYear = $criteria->fair;              //defineGoodYear
         $defineAdjustYear = $criteria->adjust;          //definePoorYear
 
+        $potential = false;
+        $highPotential = false;
+        if($criteria->HP){
+            if ($criteria->HP == "P"){
+                $potential = true;
+            }else if($criteria->HP == "HP"){
+                $highPotential = true;
+            } else if($criteria->HP == "PHP"){
+                $potential = true;
+                $highPotential = true;
+            }else{
+                $potential = false;
+                $highPotential = false;
+            }
+        }
         $reqPotential = [
-            "p"=> $criteria->P,
-            "hp"=> $criteria->HP,
+            "p"=> $potential,
+            "hp"=> $highPotential,
             "mp"=> $criteria->Master_piece
         ];  // คุณสมบัติพิเศษที่กำหนดไว้
-
         $eligibleArr = [];      
         /* 
             Array ที่ใช้เก็บค่า True (ไม่มีการเก็บค่า False) เพื่อตรวจสอบว่าพนักงานผ่านเกณฑ์ (Eligible) หรือไม่
@@ -79,7 +93,7 @@ function checkForEligible($db, $empPl, $empArr, $empTig, $empEsy, $empP, $empHP,
             }
 
             if ($defineExcellentYear != 0){
-                if ($element == $excellent && count($empArr) != 0){
+                if ($element >= $excellent && count($empArr) != 0){
                     array_push($eligibleArr, true);
                     $defineExcellentYear --;
                     continue;
@@ -87,7 +101,7 @@ function checkForEligible($db, $empPl, $empArr, $empTig, $empEsy, $empP, $empHP,
             }
 
             if ($defineVeryGoodYear != 0){
-                if ($element == $veryGood && count($empArr) != 0){
+                if ($element >= $veryGood && count($empArr) != 0){
                     array_push($eligibleArr, true);
                     $defineVeryGoodYear --;
                     continue;
@@ -95,7 +109,7 @@ function checkForEligible($db, $empPl, $empArr, $empTig, $empEsy, $empP, $empHP,
             }
 
             if ($defineGoodYear != 0){
-                if ($element == $good && count($empArr) != 0){
+                if ($element >= $good && count($empArr) != 0){
                     array_push($eligibleArr, true);
                     $defineGoodYear --;
                     continue;
@@ -103,7 +117,7 @@ function checkForEligible($db, $empPl, $empArr, $empTig, $empEsy, $empP, $empHP,
             }
 
             if ($defineFairYear != 0){
-                if ($element == $fair && count($empArr) != 0){
+                if ($element >= $fair && count($empArr) != 0){
                     array_push($eligibleArr, true);
                     $defineFairYear --;
                     continue;
@@ -111,47 +125,55 @@ function checkForEligible($db, $empPl, $empArr, $empTig, $empEsy, $empP, $empHP,
             }
 
             if ($defineAdjustYear != 0){
-                if ($element == $adjust && count($empArr) != 0){
+                if ($element >= $adjust && count($empArr) != 0){
                     array_push($eligibleArr, true);
                     $defineAdjustYear --;
                     continue;
                 }
             }
         }
-
         $isEligible = false;
         if (count($eligibleArr) == $defineYearLater and ($empTig >= $defineTig or $empEsy >= $defineEsy)){
             if ($reqPotential['p'] == true and $reqPotential['hp'] == true){
                 if (($empPotentialArr['p'] >= $reqPotential['p'] or $empPotentialArr['hp'] >= $reqPotential['hp']) and $empPotentialArr['mp'] >= $reqPotential['mp']){
                     $isEligible = true;
                 }
-            }
-        }else if ($reqPotential['p'] == false or $reqPotential['hp'] == false){
-            if (($empPotentialArr['p'] >= $reqPotential['p'] && $empPotentialArr['hp'] >= $reqPotential['hp'])&& $empPotentialArr['mp'] >= $reqPotential['mp']) {
-                $isEligible = true;
+            }else if ($reqPotential['p'] == false or $reqPotential['hp'] == false){
+                if (($empPotentialArr['p'] >= $reqPotential['p'] && $empPotentialArr['hp'] >= $reqPotential['hp'])&& $empPotentialArr['mp'] >= $reqPotential['mp']) {
+                    $isEligible = true;
+                }
             }
         }
-
         if ($isEligible){
             array_push($resultTag, $currentTag[$tagIndex]);
             // return "Eligible in $resultTag[$tagIndex]";
-            return ["status"=>"Eligible", "tag"=>str_replace("_", " ", $resultTag[$tagIndex])];
+            // return ["status"=>"Eligible", "tag"=>str_replace("_", " ", $resultTag[$tagIndex])];
+            return ["status"=>"Eligible", "tag"=>str_replace("_", " ", $resultTag[$tagIndex]), "icon"=>'<center><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="green" class="bi bi-check-circle" viewBox="0 0 16 16">
+                                                                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                                                                <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
+                                                                            </svg></center>', "year"=>[$empArr[0], $empArr[1], $empArr[2], $empArr[3], $empArr[4]], "tig-esy"=>[$empTig, $empEsy], "P-HP"=>[$empP, $empHP]];
         }else{
             array_push($resultTag, false);
 
-            if ($tagIndex == count($currentTag) - 1){
-                return ["status"=>"Not Eligible", "tag"=>"None"];
-            }
+            // if ($tagIndex == count($currentTag) - 1){
+            //     return ["status"=>"Not Eligible", "tag"=>"None"];
+            // }
         }
 
 
 
         // echo $defineExcellentYear;
-        echo $empArr[1];
+        // echo $empArr[1];
         // var_dump($reqPotential["mp"]);
-        echo "<br><br><br>";
-        
+        // echo "<br><br><br>";
     }
+
+    // return ["status"=>"Not Eligible", "tag"=>"None"];
+    return ["status"=>"Not Eligible", "tag"=>"-", "icon"=>'<center><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                                                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                                                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                                                                            </svg></center>', "year"=>[$empArr[0], $empArr[1], $empArr[2], $empArr[3], $empArr[4]], "tig-esy"=>[$empTig, $empEsy], "P-HP"=>[$empP, $empHP]];
+
 }
 
 // checkForEligible($db,"O3", [5,4,3,1,1], 4, 8, false, true, false);
@@ -231,9 +253,12 @@ function checkForEligible($db, $empPl, $empArr, $empTig, $empEsy, $empP, $empHP,
                         $stmt->execute();
                         $rows = $stmt->fetchAll();
 
-
                         $i = 1;
                         foreach ($rows as $row) {
+                            $empP = false;     // ค่าเริ่มต้นของ Potential ก่อนจะส่งเข้าไปในฟังก์ชัน checkForEligible()
+                            $empHP = false;     // ค่าเริ่มต้นของ High Potential ก่อนจะส่งเข้าไปในฟังก์ชัน checkForEligible()
+
+
                             // แปลงข้อมูลคะแนนให้เป็นรูปแบบเดียวกันคือ 5 ถึง 1
                             // ผลการประเมินย้อนหลังปีที่ 1
                             switch ($row['review_rating_past1y']) {
@@ -395,6 +420,55 @@ function checkForEligible($db, $empPl, $empArr, $empTig, $empEsy, $empP, $empHP,
                                     break;
                             }
 
+                            //############################################################################
+
+                            // ตรวจสอบ Potential หรือ High Potential ของพนักงานย้อนหลัง 5 ปี
+                            switch ($row['hp_review_rating_past1y']) {
+                                case 'P':
+                                    $empP = true;
+                                    break;
+                                case 'HP':
+                                    $empHP = true;
+                                    break;
+                            }
+
+                            switch ($row['hp_review_rating_past2y']) {
+                                case 'P':
+                                    $empP = true;
+                                    break;
+                                case 'HP':
+                                    $empHP = true;
+                                    break;
+                            }
+
+                            switch ($row['hp_review_rating_past3y']) {
+                                case 'P':
+                                    $empP = true;
+                                    break;
+                                case 'HP':
+                                    $empHP = true;
+                                    break;
+                            }
+
+                            switch ($row['hp_review_rating_past4y']) {
+                                case 'P':
+                                    $empP = true;
+                                    break;
+                                case 'HP':
+                                    $empHP = true;
+                                    break;
+                            }
+
+                            switch ($row['hp_review_rating_past5y']) {
+                                case 'P':
+                                    $empP = true;
+                                    break;
+                                case 'HP':
+                                    $empHP = true;
+                                    break;
+                            }
+                            // var_dump( $empP);
+                            // echo "<br><br><br><br><br>";
                             $eligible = checkForEligible(
                                 $db,
                                 $row['pl_subset_eng'],
@@ -407,14 +481,19 @@ function checkForEligible($db, $empPl, $empArr, $empTig, $empEsy, $empP, $empHP,
                                 ],
                                 $row['pl_year'],
                                 $row['esy'],
-                                true,   //P
-                                true,   // HP
+                                $empP,   //P
+                                $empHP,   // HP
                                 $row['master_piece']
                                 
                             );
 
-                            $eligibleStatus = $eligible['status'];
+                            $eligibleStatus = $eligible['icon'];
                             $eligibleInTag = $eligible['tag'];
+
+                            $year = $eligible['year'];  // debug
+                            $tig_esy = $eligible['tig-esy'];    //debug
+                            $empPotentialArrDebug = $eligible['P-HP'];    //debug
+
                         ?>
                             <tr>
                                 <td class="font-td-table text-center"><?php echo $i; ?></td>
@@ -443,7 +522,36 @@ function checkForEligible($db, $empPl, $empArr, $empTig, $empEsy, $empP, $empHP,
                                 </td>
                                 <td class="font-td-table">
                                     <?php 
-                                        echo $eligibleInTag; 
+                                    switch ($eligibleInTag) {
+                                        case 'Super Fast':
+                                            echo "<span style='color:#b52476'><b>$eligibleInTag</b></span>";
+                                            break;
+                                        case 'Fast':
+                                            echo "<span style='color:#24a9b5'><b>$eligibleInTag</b></span>";
+                                            break;
+                                        case 'Normal':
+                                            echo "<span style='color:#24b535'><b>$eligibleInTag</b></span>";
+                                            break;
+                                        default:
+                                        echo "<span>$eligibleInTag</span>";
+                                            break;
+                                    }
+                                        // echo "<span style='color:#24b535'><b>$eligibleInTag</b></span>"; 
+                                    ?>
+                                </td>
+                                <td class="font-td-table">
+                                    <?php 
+                                        echo "Year: $year[0] $year[1] $year[2] $year[3] $year[4]"; 
+                                    ?>
+                                </td>
+                                <td class="font-td-table">
+                                    <?php 
+                                        echo "TIG-ESY: $tig_esy[0] $tig_esy[1]"; 
+                                    ?>
+                                </td>
+                                <td class="font-td-table">
+                                    <?php 
+                                        echo "P: $empPotentialArrDebug[0] HP: $empPotentialArrDebug[1]"; 
                                     ?>
                                 </td>
                             </tr>
