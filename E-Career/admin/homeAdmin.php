@@ -26,7 +26,7 @@ function checkForEligible($db, $empPl, $empArr, $empTig, $empEsy, $empP, $empHP,
     $resultTag = [];
     for ($tagIndex=0; $tagIndex < count($currentTag); $tagIndex++) { 
         // รับค่าเกณฑ์มาจาก DB โดยอ้างอิงจากวันที่ล่าสุดที่ประกาศใช้ (Active Date) ในแต่ละ Tag ของแต่ละ PL Level
-        // $criteriaSql = "SELECT * FROM PA_standard WHERE Active_Date = (SELECT MAX(Active_Date) FROM PA_standard) AND PA_level = :pl_level AND Tag = :tag";  
+        // $criteriaSql = "SELECT * FROM PA_standard WHERE Active_Date = (SELECT MAX(Active_Date) FROM PA_standard) AND PA_level = :pl_level AND Tag = :tag";  // OLD
         $criteriaSql = "SELECT * FROM PA_standard WHERE Active_Date <= GETDATE() AND PA_level = :pl_level AND Tag = :tag";  
         //###################################################################################################
         $stmt = $db->prepare($criteriaSql);
