@@ -123,6 +123,7 @@ include '../login/loginCheckSession.php';
                             <input type="date" id="start-date" name="start-date" class="me-2 dateinput">
                             <label for="end-date" class="me-2">วันที่สิ้นสุด: </label>
                             <input type="date" id="end-date" name="end-date" class="me-2 dateinput">
+                            <button id="all-filter" class="btn btn-info" style="width: 70px;">All</button>
                         </div>
                         <div class="col-6 d-flex justify-content-end">
                             <input type="text" id="searchInput" class="form-control me-2" style="width: 300px;" placeholder="ค้นหารายชื่อพนักงาน" autocomplete="off">
@@ -393,6 +394,13 @@ include '../login/loginCheckSession.php';
 
             // Event listener to the two range filtering inputs to redraw on input
             $('#start-date, #end-date').change(function() {
+                table.draw();
+            });
+
+            // All filter button functionality
+            $('#all-filter').click(function() {
+                $('#start-date').val('');
+                $('#end-date').val('');
                 table.draw();
             });
         });
