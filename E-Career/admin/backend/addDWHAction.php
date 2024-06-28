@@ -110,8 +110,11 @@ try {
     division_name = ?, company_name = ?, sub11_business_unit = ?, sub1_business_unit = ?, business_unit_description = ?, position_name_eng = ?, cost_center_payment = ?, 
     cost_center_org = ?, emp_type = ?, birthdate = ?, scg_hiring_date = ?, position_entry_date = ?, pl_year = ?, pl_month = ?, age_year = ?, age_month = ?, service_year = ?,
     service_month = ?, esy = ?, oesy = ?, oesm = ?, salary = ?, review_rating_past1y = ?, review_rating_past2y = ?, review_rating_past3y = ?, review_rating_past4y = ?,
-    review_rating_past5y = ?, hp_review_rating_past1y = ?, hp_review_rating_past2y = ?, hp_review_rating_past3y = ?, hp_review_rating_past4y = ?, hp_review_rating_past5y = ?,
-    percentile_range = ?, master_piece = ?, master_piece_file = ?, eligible = ?, eligible_type = ? WHERE emp_code = ?";
+    review_rating_past5y = ?, hp_review_current = ?, hp_review_rating_current = ?, hp_description_current = ?, hp_review_past1y = ?, hp_review_rating_past1y = ?, 
+    hp_description_past1y = ?, hp_review_past2y = ?, hp_review_rating_past2y = ?, hp_description_past2y = ?, hp_review_past3y = ?, hp_review_rating_past3y = ?, 
+    hp_description_past3y = ?, hp_review_past4y = ?, hp_review_rating_past4y = ?, hp_description_past4y = ?, hp_review_past5y = ?, hp_review_rating_past5y = ?, 
+    hp_description_past5y = ?, percentile_range = ?, master_piece = ?, master_piece_active_date = ?, master_piece_file = ?, eligible = ?, eligible_type = ? 
+    WHERE emp_code = ?";
 
     $insertStmt = $db->prepare($insertSQL);
     $updateStmt = $db->prepare($updateSQL);
@@ -133,8 +136,10 @@ try {
                 $row['position_name_eng'], $row['cost_center_payment'], $row['cost_center_org'], $row['emp_type'], $row['birthdate'], $row['scg_hiring_date'], $row['position_entry_date'],
                 $row['pl_year'], $row['pl_month'], $row['age_year'], $row['age_month'], $row['service_year'], $row['service_month'], $row['esy'], $row['oesy'], $row['oesm'],
                 $row['salary'], $row['review_rating_past1y'], $row['review_rating_past2y'], $row['review_rating_past3y'], $row['review_rating_past4y'], $row['review_rating_past5y'],
-                $row['hp_review_rating_past1y'], $row['hp_review_rating_past2y'], $row['hp_review_rating_past3y'], $row['hp_review_rating_past4y'], $row['hp_review_rating_past5y'],
-                $row['percentile_range'], $row['master_piece'], $row['master_piece_file'], $row['eligible'], $row['eligible_type'], $row['emp_code']
+                $row['hp_review_current'], $row['hp_review_rating_current'], $row['hp_description_current'], $row['hp_review_past1y'], $row['hp_review_rating_past1y'], $row['hp_description_past1y'],
+                $row['hp_review_past2y'], $row['hp_review_rating_past2y'], $row['hp_description_past2y'], $row['hp_review_past3y'], $row['hp_review_rating_past3y'], $row['hp_description_past3y'],
+                $row['hp_review_past4y'], $row['hp_review_rating_past4y'], $row['hp_description_past4y'], $row['hp_review_past5y'], $row['hp_review_rating_past5y'], $row['hp_description_past5y'],
+                $row['percentile_range'], $row['master_piece'], $row['master_piece_active_date'], $row['master_piece_file'], $row['eligible'], $row['eligible_type'], $row['emp_code']
             ]);
         } else {
             // Insert new record
@@ -144,7 +149,7 @@ try {
 
     // Commit the transaction
     $db->commit();
-    echo "Success Import Data.";
+    echo "Import Data Success.";
 } catch (Exception $e) {
     // Rollback the transaction if something went wrong
     if ($db->inTransaction()) {
