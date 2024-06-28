@@ -539,7 +539,7 @@ function checkForEligible($db, $empPl, $empArr, $empTig, $empEsy, $empP, $empHP,
                                         // echo "<span style='color:#24b535'><b>$eligibleInTag</b></span>"; 
                                     ?>
                                 </td>
-                                <td class="font-td-table">
+                                <!-- <td class="font-td-table">
                                     <?php 
                                         echo "$year[0] $year[1] $year[2] $year[3] $year[4]";
                                     ?>
@@ -548,7 +548,7 @@ function checkForEligible($db, $empPl, $empArr, $empTig, $empEsy, $empP, $empHP,
                                     <?php 
                                         var_dump($tig_esy);
                                     ?>
-                                </td>
+                                </td> -->
                             </tr>
                         <?php
                             $i++;
