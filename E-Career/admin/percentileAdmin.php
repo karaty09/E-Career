@@ -90,7 +90,12 @@ include '../login/loginCheckSession.php';
                                             <td class="text-start"><?php echo $row['percentile_name'] ?></td>
                                             <td class="text-center"><button class="button-table showBtn" data-bs-toggle="modal" data-bs-target="#showPercentileModal" data-id="<?php echo $row['percentile_id'] ?>"><img src="../assets/img/search.png" alt="" class="img-button-table"></button></td>
                                             <td class="text-center"><button class="button-table editBtn" data-bs-toggle="modal" data-bs-target="#editPercentileModal" data-id="<?php echo $row['percentile_id'] ?>"><img src="../assets/img/pencil.png" alt="" class="img-button-table"></button></td>
-                                            <td class="text-center"><button class="button-table" data-bs-toggle="modal" data-bs-target="#pdfModal" data-id="../admin/filedata/percentile_pdf/63110951_สาณิตา_จิตตุราช.pdf"><img src="../assets/img/docs.png" alt="" class="img-button-table"></button></td>
+                                            <!-- <td class="text-center"><button class="button-table" data-bs-toggle="modal" data-bs-target="#pdfModal" data-id="../admin/filedata/percentile_pdf/63110951_สาณิตา_จิตตุราช.pdf"><img src="../assets/img/docs.png" alt="" class="img-button-table"></button></td> -->
+                                            <td class="text-center">
+                                                <button class="button-table" id="<?php echo rawurlencode($row['percentile_pdf_file_name']); ?>" onclick="window.open('../assets/filedata/percentile_pdf/<?php echo !empty($row['percentile_pdf_file_name']) ? rawurlencode($row['percentile_pdf_file_name']) : '-'; ?>', '_blank')">
+                                                    <img src="../assets/img/docs.png" alt="" class="img-button-table">
+                                                </button>
+                                            </td>
                                             <td class="text-center">
                                                 <?php
                                                 $date = new DateTime($row['active_date']);
@@ -286,37 +291,6 @@ include '../login/loginCheckSession.php';
         </div>
     </div>
 
-    <!-- Modal Show PDF -->
-    <!-- <div class="modal fade" id="pdfModal" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="pdfModalLabel">PDF Viewer</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <iframe id="pdfFrame" src="" style="width: 100%; height: 500px;" frameborder="0"></iframe>
-                </div>
-            </div>
-        </div>
-    </div> -->
-
-    <!-- <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var pdfModal = document.getElementById('pdfModal');
-
-            pdfModal.addEventListener('show.bs.modal', function(event) {
-                var button = event.relatedTarget; // ปุ่มที่เรียก Modal
-                var pdfUrl = button.getAttribute('data-pdf'); // ดึงค่า URL ของ PDF จาก data-pdf attribute
-                var iframe = pdfModal.querySelector('.modal-body iframe');
-                iframe.setAttribute('src', pdfUrl); // กำหนดค่า src ของ iframe
-                console.log('Success');
-            });
-        });
-    </script> -->
-
     <!-- Footer -->
     <?php include '../assets/src/footer.php' ?>
 
@@ -382,7 +356,7 @@ include '../login/loginCheckSession.php';
         });
     </script>
 
-    <!-- Modal Data Percentile -->
+    <!-- Modal Add Data Percentile -->
     <script>
         document.getElementById('percentileModalAdd').addEventListener('submit', function(event) {
             event.preventDefault();
