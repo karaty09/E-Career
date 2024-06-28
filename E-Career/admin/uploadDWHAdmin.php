@@ -228,7 +228,6 @@ include '../login/loginCheckSession.php';
                     hp_review_rating_past5y: row["High Potential Review Rating (Past 5 Year)"] || null,
                     hp_description_past5y: row["High Potential Description (Past 5 Year)"] || null,
                 }));
-
                 // Send the JSON data to the PHP script using fetch API
                 fetch('./backend/addDWHAction.php', {
                         method: 'POST',
