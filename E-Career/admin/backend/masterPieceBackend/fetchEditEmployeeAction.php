@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['id'])) {
         <div id="causeMasterPiece" class="row mb-3" hidden>
             <div class="col-md-12 col-12">
                 <p>เหตุผลที่ติ๊ก Master Piece ออก: </p>
-                <input type="text" class="form-control" id="editMasterPieceDropCause" autocomplete="off">
+                <input type="text" class="form-control" id="editMasterPieceDropCause" autocomplete="off" required>
             </div>
         </div>
 <?php
