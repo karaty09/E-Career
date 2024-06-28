@@ -539,6 +539,16 @@ function checkForEligible($db, $empPl, $empArr, $empTig, $empEsy, $empP, $empHP,
                                         // echo "<span style='color:#24b535'><b>$eligibleInTag</b></span>"; 
                                     ?>
                                 </td>
+                                <!-- <td class="font-td-table">
+                                    <?php 
+                                        echo "$year[0] $year[1] $year[2] $year[3] $year[4]";
+                                    ?>
+                                </td>
+                                <td class="font-td-table">
+                                    <?php 
+                                        var_dump($tig_esy);
+                                    ?>
+                                </td> -->
                             </tr>
                         <?php
                             $i++;
@@ -566,12 +576,44 @@ function checkForEligible($db, $empPl, $empArr, $empTig, $empEsy, $empP, $empHP,
 
     <!-- DataTables Config -->
     <script>
-        $(document).ready(function() {
+ $(document).ready(function() {
             var table = $('#tb-data').DataTable();
 
-            // $('#searchInput').on('keyup', function() {
-            //     table.search(this.value).draw();
-            // });
+            $('#searchInput').on('keyup', function() {
+                table.search(this.value).draw();
+            });
+
+            $('.js-example-basic-single').select2({
+                dropdownParent: $('#addEmployeeModal'),
+                placeholder: 'ค้นหารายชื่อพนักงาน',
+            });
+
+            $('#addEmpInput').on('change', function() {
+                var selectedAddEmployeeId = $(this).val();
+                addSelectEmp(selectedAddEmployeeId);
+            });
+
+            // Custom filtering function which will search data in column 4 between two dates
+            $.fn.dataTable.ext.search.push(
+                function(settings, data, dataIndex) {
+                    var startDate = $('#start-date').val();
+                    var endDate = $('#end-date').val();
+                    var date = data[2]; // Use data for the date column
+
+                    if ((startDate === "" && endDate === "") ||
+                        (startDate === "" && date <= endDate) ||
+                        (startDate <= date && endDate === "") ||
+                        (startDate <= date && date <= endDate)) {
+                        return true;
+                    }
+                    return false;
+                }
+            );
+
+            // Event listener to the two range filtering inputs to redraw on input
+            $('#start-date, #end-date').change(function() {
+                table.draw();
+            });
         });
     </script>
 

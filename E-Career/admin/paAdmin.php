@@ -44,7 +44,75 @@ include '../login/loginCheckSession.php';
     <!-- Navbar -->
     <?php include './navbarAdmin.php' ?>
 
-    <!-- Content -->
+    <div class="container-fluid mt-3 mb-3">
+        <div class="row" style="margin-left: 40px; margin-right: 40px;">
+            <div class="col-md-12 col-12" style="padding: 20px; height: 100%;">
+                <div class="row mb-3">
+                    <div class="col-6 d-flex justify-content-start">
+                        <h4 class="text-black">หลักเกณฑ์ Promotion Adjustment (PA) ที่กำลังใช้งาน</h4>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body" style="overflow-y: auto;">
+                        <table class="table table-striped table-bordered">
+                            <thead class="table-danger">
+                                <tr>
+                                    <th scope="col" class="text-center">Name</th>
+                                    <th scope="col" class="text-center">View Date</th>
+                                    <th scope="col" class="text-center">Edit</th>
+                                    <th scope="col" class="text-center">PDF File</th>
+                                    <th scope="col" class="text-center">Active Date</th>
+                                    <th scope="col" class="text-center">Edit By</th>
+                                    <th scope="col" class="text-center">Edit Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $PA = "SELECT Meet, Active_Date, Edit_by, Edit_Date, document FROM PA_standard WHERE Active_Date = (SELECT MAX(Active_Date) FROM PA_standard) GROUP BY Meet, Active_Date, Edit_by, Edit_Date, document";
+                                $PA_result = $db->prepare($PA);
+                                $PA_result->execute();
+                                $PA_data = $PA_result->fetchAll();
+                                if ($PA_result->rowCount() > 0) {
+                                    foreach ($PA_data as $row) {
+                                        $active_date = DateTime::createFromFormat('Y-m-d', $row['Active_Date'])->format('d-m-Y');
+                                        $edit_date = DateTime::createFromFormat('Y-m-d', $row['Edit_Date'])->format('d-m-Y');
+                                        $meet_date = DateTime::createFromFormat('Y-m-d', $row['Meet'])->format('d-m-Y');
+                                ?>
+                                        <tr>
+                                            <td class="text-start"> หลักเกณฑ์ Promotion Adjustment ประชุมบุคคล ณ <?php echo ($meet_date) ?></td>
+                                            <td class="text-center">
+                                                <button type="button" class="button-table" onclick="sendMeet('<?php echo $row['Meet']; ?>')">
+                                                    <img src="../assets/img/search.png" alt="" class="img-button-table">
+                                                </button>
+                                            </td>
+                                            <td class="text-center">
+                                                <button type="button" class="button-table" onclick="sendMeetEdit('<?php echo $row['Meet']; ?>')">
+                                                    <img src="../assets/img/pencil.png" alt="" class="img-button-table">
+                                                </button>
+                                            </td>
+                                            <td class="text-center">
+                                                <button class="button-table" id="<?php echo $row['Meet']; ?>" onclick="window.open('../assets/filedata/PA_pdf/<?php echo (!empty($row['document']) ? $row['document'] : '-'); ?>', '_blank')">
+                                                    <img src="../assets/img/docs.png" alt="" class="img-button-table">
+                                                </button>
+                                            </td>
+                                            <td class="text-center"><?php echo ($active_date) ?></td>
+                                            <td class="text-center"><?php echo $row['Edit_by'] ?></td>
+                                            <td class="text-center"><?php echo ($edit_date) ?></td>
+                                        </tr>
+                                <?php
+                                  }} else {
+                                    // Handle case where no rows are returned, maybe display a message
+                                    echo '<tr><td colspan="8" class="text-center">ไม่มีข้อมูลหลักเกณฑ์ในการประเมิน PA Level ที่บันทึก</td></tr>';
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--หลักเกณฑ์ทั้งหมด -->
     <div class="container-fluid mt-3 mb-3">
         <div class="row" style="margin-left: 40px; margin-right: 40px;">
             <div class="col-md-12 col-12" style="padding: 20px; height: 100%;">
@@ -118,24 +186,6 @@ include '../login/loginCheckSession.php';
                         </table>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Show -->
-    <div class="modal fade" id="showPAModal" tabindex="-1" aria-labelledby="showPAModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div id="showModalBody">
-                <!-- ข้อมูลที่จะแสดงจะถูกโหลดมาที่นี่ -->
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Edit -->
-    <div class="modal fade" id="editPAModal" tabindex="-1" aria-labelledby="editPAModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div id="editModalBody">
-                <!-- ข้อมูลที่จะแสดงจะถูกโหลดมาที่นี่ -->
             </div>
         </div>
     </div>
