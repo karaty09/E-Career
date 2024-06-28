@@ -434,12 +434,14 @@ include '../login/loginCheckSession.php';
                 document.getElementById("editEmpMasterPieceFile").disabled = false;
                 document.getElementById("editEmpMasterPieceActiveDate").disabled = false;
                 document.getElementById("causeMasterPiece").hidden = true;
+                document.getElementById("editMasterPieceDropCause").required = false;
             } else {
                 document.getElementById("editEmpMasterPieceFile").disabled = true;
                 document.getElementById("editEmpMasterPieceActiveDate").disabled = true;
                 document.getElementById("editEmpMasterPieceFile").value = null;
                 document.getElementById("editEmpMasterPieceActiveDate").value = null;
                 document.getElementById("causeMasterPiece").hidden = false;
+                document.getElementById("editMasterPieceDropCause").required = true;
             }
         }
     </script>
@@ -489,6 +491,7 @@ include '../login/loginCheckSession.php';
                             document.getElementById("editEmpMasterPieceFile").disabled = false;
                             document.getElementById("editEmpMasterPieceActiveDate").disabled = false;
                             document.getElementById("causeMasterPiece").hidden = true;
+                            document.getElementById("editMasterPieceDropCause").required = false;
 
                             // ลบ event listener หลังจากทำงานเสร็จ
                             editEmployeeModal.removeEventListener('shown.bs.modal', onShown);
