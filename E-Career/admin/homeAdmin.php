@@ -18,13 +18,12 @@ function checkForEligible($db, $empPl, $empArr, $empTig, $empEsy, $empP, $empHP,
     ];
 
     $currentTag = [
-        "Super_Fast",
+        "Super Fast",
         "Fast",
         "Normal"
     ];
-    
-    $resultTag = [];
 
+    $resultTag = [];
     for ($tagIndex=0; $tagIndex < count($currentTag); $tagIndex++) { 
         $criteriaSql = "SELECT * FROM PA_standard WHERE Active_Date = (SELECT MAX(Active_Date) FROM PA_standard) AND PA_level = :pl_level AND Tag = :tag";  // รับค่าเกณฑ์มาจาก DB โดยอ้างอิงจากวันที่ล่าสุดที่ประกาศใช้ (Active Date) ในแต่ละ Tag ของแต่ละ PL Level
         $stmt = $db->prepare($criteriaSql);
@@ -148,7 +147,7 @@ function checkForEligible($db, $empPl, $empArr, $empTig, $empEsy, $empP, $empHP,
             array_push($resultTag, $currentTag[$tagIndex]);
             // return "Eligible in $resultTag[$tagIndex]";
             // return ["status"=>"Eligible", "tag"=>str_replace("_", " ", $resultTag[$tagIndex])];
-            return ["status"=>"Eligible", "tag"=>str_replace("_", " ", $resultTag[$tagIndex]), "icon"=>'<center><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="green" class="bi bi-check-circle" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/><path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/></svg></center>', "year"=>[$empArr[0], $empArr[1], $empArr[2], $empArr[3], $empArr[4]], "tig-esy"=>[$empTig, $empEsy], "P-HP"=>[$empP, $empHP]];
+            return ["status"=>"Eligible", "tag"=>$resultTag[$tagIndex], "icon"=>'<center><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="green" class="bi bi-check-circle" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/><path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/></svg></center>', "year"=>[$empArr[0], $empArr[1], $empArr[2], $empArr[3], $empArr[4]], "tig-esy"=>[$empTig, $empEsy], "P-HP"=>[$empP, $empHP]];
         }else{
             array_push($resultTag, false);
 
@@ -481,12 +480,19 @@ function checkForEligible($db, $empPl, $empArr, $empTig, $empEsy, $empP, $empHP,
                                 
                             );
 
-                            $eligibleStatus = $eligible['icon'];
-                            $eligibleInTag = $eligible['tag'];
-
-                            $year = $eligible['year'];  // debug
-                            $tig_esy = $eligible['tig-esy'];    //debug
-                            $empPotentialArrDebug = $eligible['P-HP'];    //debug
+                            if ($eligible['status'] == "N/A"  and $eligible['tag'] == "N/A"){
+                                $eligibleStatus = "N/A";
+                                $eligibleInTag = "N/A";
+                                
+                            }else{
+                                $eligibleStatus = $eligible['icon'];
+                                $eligibleInTag = $eligible['tag'];
+                                
+                                $year = $eligible['year'];  // debug
+                                $tig_esy = $eligible['tig-esy'];    //debug
+                                $empPotentialArrDebug = $eligible['P-HP'];    //debug
+                            }
+                            
 
                         ?>
                             <tr>
@@ -531,21 +537,6 @@ function checkForEligible($db, $empPl, $empArr, $empTig, $empEsy, $empP, $empHP,
                                             break;
                                     }
                                         // echo "<span style='color:#24b535'><b>$eligibleInTag</b></span>"; 
-                                    ?>
-                                </td>
-                                <td class="font-td-table">
-                                    <?php 
-                                        echo "Year: $year[0] $year[1] $year[2] $year[3] $year[4]"; 
-                                    ?>
-                                </td>
-                                <td class="font-td-table">
-                                    <?php 
-                                        echo "TIG-ESY: $tig_esy[0] $tig_esy[1]"; 
-                                    ?>
-                                </td>
-                                <td class="font-td-table">
-                                    <?php 
-                                        echo "P: $empPotentialArrDebug[0] HP: $empPotentialArrDebug[1]"; 
                                     ?>
                                 </td>
                             </tr>
