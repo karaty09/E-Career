@@ -214,7 +214,6 @@ include '../login/loginCheckSession.php';
                     eligible: "",
                     eligible_type: "",
                 }));
-
                 // Send the JSON data to the PHP script using fetch API
                 fetch('./backend/addExcelDataAction.php', {
                         method: 'POST',

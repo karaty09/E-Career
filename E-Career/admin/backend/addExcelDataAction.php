@@ -5,7 +5,7 @@ try {
     // Get the raw POST data
     $json = file_get_contents('php://input');
     $data = json_decode($json, true);
-
+    
     if ($data === null) {
         throw new Exception("Invalid JSON data");
     }
