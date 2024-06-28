@@ -68,7 +68,7 @@ include '../login/loginCheckSession.php';
                             </thead>
                             <tbody>
                                 <?php
-                                $PA = "SELECT Meet, Active_Date, Edit_by, Edit_Date, document FROM PA_standard WHERE Active_Date = (SELECT MAX(Active_Date) FROM PA_standard) GROUP BY Meet, Active_Date, Edit_by, Edit_Date, document";
+                                $PA = "SELECT Meet, Active_Date, Edit_by, Edit_Date, document FROM PA_standard WHERE Active_Date = (SELECT MAX(Active_Date) FROM PA_standard WHERE Active_Date <= GETDATE()) GROUP BY Meet, Active_Date, Edit_by, Edit_Date, document";
                                 $PA_result = $db->prepare($PA);
                                 $PA_result->execute();
                                 $PA_data = $PA_result->fetchAll();
@@ -112,6 +112,7 @@ include '../login/loginCheckSession.php';
             </div>
         </div>
     </div>
+    <hr>
     <!--หลักเกณฑ์ทั้งหมด -->
     <div class="container-fluid mt-3 mb-3">
         <div class="row" style="margin-left: 40px; margin-right: 40px;">
