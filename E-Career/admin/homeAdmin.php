@@ -25,7 +25,10 @@ function checkForEligible($db, $empPl, $empArr, $empTig, $empEsy, $empP, $empHP,
 
     $resultTag = [];
     for ($tagIndex=0; $tagIndex < count($currentTag); $tagIndex++) { 
-        $criteriaSql = "SELECT * FROM PA_standard WHERE Active_Date = (SELECT MAX(Active_Date) FROM PA_standard) AND PA_level = :pl_level AND Tag = :tag";  // รับค่าเกณฑ์มาจาก DB โดยอ้างอิงจากวันที่ล่าสุดที่ประกาศใช้ (Active Date) ในแต่ละ Tag ของแต่ละ PL Level
+        // รับค่าเกณฑ์มาจาก DB โดยอ้างอิงจากวันที่ล่าสุดที่ประกาศใช้ (Active Date) ในแต่ละ Tag ของแต่ละ PL Level
+        // $criteriaSql = "SELECT * FROM PA_standard WHERE Active_Date = (SELECT MAX(Active_Date) FROM PA_standard) AND PA_level = :pl_level AND Tag = :tag";  // OLD
+        $criteriaSql = "SELECT * FROM PA_standard WHERE Active_Date <= GETDATE() AND PA_level = :pl_level AND Tag = :tag";  
+        //###################################################################################################
         $stmt = $db->prepare($criteriaSql);
         $stmt->bindParam("pl_level", $empPl);
         $stmt->bindParam("tag", $currentTag[$tagIndex]);
@@ -191,6 +194,9 @@ function checkForEligible($db, $empPl, $empArr, $empTig, $empEsy, $empP, $empHP,
 
     <!-- CSS Style -->
     <link rel="stylesheet" href="../assets/src/styles/stylesBody.css">
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
 
     <style>
         .font-td-table {
@@ -570,50 +576,13 @@ function checkForEligible($db, $empPl, $empArr, $empTig, $empEsy, $empP, $empHP,
     <!-- jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
-    <!-- DataTables -->
-    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
 
     <!-- DataTables Config -->
     <script>
  $(document).ready(function() {
             var table = $('#tb-data').DataTable();
-
-            $('#searchInput').on('keyup', function() {
-                table.search(this.value).draw();
-            });
-
-            $('.js-example-basic-single').select2({
-                dropdownParent: $('#addEmployeeModal'),
-                placeholder: 'ค้นหารายชื่อพนักงาน',
-            });
-
-            $('#addEmpInput').on('change', function() {
-                var selectedAddEmployeeId = $(this).val();
-                addSelectEmp(selectedAddEmployeeId);
-            });
-
-            // Custom filtering function which will search data in column 4 between two dates
-            $.fn.dataTable.ext.search.push(
-                function(settings, data, dataIndex) {
-                    var startDate = $('#start-date').val();
-                    var endDate = $('#end-date').val();
-                    var date = data[2]; // Use data for the date column
-
-                    if ((startDate === "" && endDate === "") ||
-                        (startDate === "" && date <= endDate) ||
-                        (startDate <= date && endDate === "") ||
-                        (startDate <= date && date <= endDate)) {
-                        return true;
-                    }
-                    return false;
-                }
-            );
-
-            // Event listener to the two range filtering inputs to redraw on input
-            $('#start-date, #end-date').change(function() {
-                table.draw();
-            });
         });
     </script>
 
