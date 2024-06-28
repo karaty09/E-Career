@@ -1,0 +1,40 @@
+.font-td-table {
+  font-size: 10px;
+}
+
+.button-table {
+  background-color: white;
+  border: none;
+  padding: 0;
+}
+
+.img-button-table {
+  width: 30px;
+  height: 30px;
+}
+
+/* dataTables Config */
+.dataTables_filter,
+.dataTables_length,
+.dataTables_info {
+  display: none;
+}
+
+.dataTables_wrapper .dataTables_paginate {
+  display: none;
+}
+
+.font-head {
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.font-td-table {
+  font-size: 14px;
+}
+
+thead th {
+  text-align: center;
+  vertical-align: middle;
+}
